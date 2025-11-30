@@ -82,14 +82,7 @@ const LoginForm = () => {
         Sign in
       </Button>
 
-      {/* Helper text for the Hackathon Judge/User */}
-      <div className="text-xs text-gray-500 mt-4 bg-gray-50 p-2 rounded border">
-        <p className="font-bold">🧪 Demo Login Credentials:</p>
-        <p>Admin: <span className="font-mono">admin@hms.com</span></p>
-        <p>Doctor: <span className="font-mono">doctor@hms.com</span></p>
-        <p>Nurse: <span className="font-mono">nurse@hms.com</span></p>
-        <p>Front Desk: <span className="font-mono">reception@hms.com</span></p>
-      </div>
+     
 
       <div className="mt-4 text-center border-t pt-4">
         <p className="text-sm text-gray-600">

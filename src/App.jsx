@@ -43,8 +43,8 @@ import EmergencyDashboard from './pages/receptionist/EmergencyDashboard';
 import LabReports from './pages/lab/LabReports';
 
 // COMMON PAGES
-import UserProfile from './pages/common/UserProfile'; // <-- NEW
-import PatientDetails from './pages/patients/PatientDetails'; // <-- NEW
+import UserProfile from './components/common/UserProfile'; // <-- NEW
+import PatientDetails from './pages/patients/PatientDetailsPage'; // <-- NEW
 
 function App() {
   return (
