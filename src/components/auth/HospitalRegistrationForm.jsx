@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import hospitalService from '../../services/api/hospital.service';
+// Ensure these paths are correct relative to this file
 import Input from '../common/Input';
 import Button from '../common/Button';
 
 const HospitalRegistrationForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   
-  // Updated state for Indian address structure
   const [formData, setFormData] = useState({
     hospitalName: '',
     addressLine1: '',
@@ -20,8 +21,6 @@ const HospitalRegistrationForm = () => {
     adminPassword: '',
     confirmPassword: ''
   });
-  
-  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,32 +31,26 @@ const HospitalRegistrationForm = () => {
     e.preventDefault();
     setError('');
 
+    // Basic Validation
     if (formData.adminPassword !== formData.confirmPassword) {
       setError("Passwords do not match");
-      return;
-    }
-
-    // Basic Indian Phone Validation (10 digits)
-    if (formData.contactNumber.length < 10) {
-      setError("Please enter a valid 10-digit mobile number");
       return;
     }
 
     setLoading(true);
 
     try {
-      // Combine address parts for backend if needed, or send as is
-      const payload = {
-        ...formData,
-        fullAddress: `${formData.addressLine1}, ${formData.city}, ${formData.state} - ${formData.pincode}`
-      };
-
-      await hospitalService.register(payload);
+      // Call the API
+      const response = await hospitalService.register(formData);
       
-      alert("Registration Successful! Please login.");
+      // Success Message
+      alert(`Registration Successful! \nYour Hospital ID is: ${response.data.tenantId}\nPlease save this ID for login.`);
+      
+      // Redirect to Login
       navigate('/login');
     } catch (err) {
-      setError("Registration failed. Please try again.");
+      console.error(err);
+      setError(err.message || "Registration failed. Please check your connection.");
     } finally {
       setLoading(false);
     }
@@ -67,7 +60,7 @@ const HospitalRegistrationForm = () => {
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
         <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
-          <p className="text-red-700">{error}</p>
+          <p className="text-red-700 font-medium text-sm">{error}</p>
         </div>
       )}
 
@@ -80,7 +73,7 @@ const HospitalRegistrationForm = () => {
         name="hospitalName"
         value={formData.hospitalName}
         onChange={handleChange}
-        placeholder="e.g. Apollo Hospital / Sahyadri Hospital"
+        placeholder="e.g. Apollo Hospital"
         required
       />
 
@@ -89,11 +82,10 @@ const HospitalRegistrationForm = () => {
         name="addressLine1"
         value={formData.addressLine1}
         onChange={handleChange}
-        placeholder="Building No, Street Name, Area"
+        placeholder="Building No, Street Name"
         required
       />
 
-      {/* Row for City and State */}
       <div className="grid grid-cols-2 gap-4">
         <Input
           label="City"
@@ -103,42 +95,19 @@ const HospitalRegistrationForm = () => {
           placeholder="e.g. Pune"
           required
         />
-        
-        {/* In a real app, this should be a dropdown of Indian States */}
         <Input
-          label="State"
-          name="state"
-          value={formData.state}
-          onChange={handleChange}
-          placeholder="e.g. Maharashtra"
-          required
-        />
-      </div>
-
-      {/* Row for Pincode and Phone */}
-      <div className="grid grid-cols-2 gap-4">
-        <Input
-          label="Pincode"
-          name="pincode"
-          value={formData.pincode}
-          onChange={handleChange}
-          placeholder="411057"
-          required
-          type="number"
-        />
-        <Input
-          label="Contact Number (+91)"
+          label="Contact No (+91)"
           name="contactNumber"
           value={formData.contactNumber}
           onChange={handleChange}
-          placeholder="98765 43210"
-          required
+          placeholder="9876543210"
           type="tel"
+          required
         />
       </div>
 
       <div className="border-b pb-2 mb-4 mt-6">
-        <h3 className="text-lg font-medium text-gray-900">Admin Account (HOD/Dean)</h3>
+        <h3 className="text-lg font-medium text-gray-900">Admin Account</h3>
       </div>
 
       <Input

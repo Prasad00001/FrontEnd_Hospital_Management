@@ -5,12 +5,14 @@ import Input from '../common/Input';
 import Button from '../common/Button';
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+  const { login, error, loading } = useContext(AuthContext);
+
   const [formData, setFormData] = useState({
+    hospitalId: '', // Critical for Multi-tenancy
     email: '',
     password: ''
   });
-  const { login, error, loading } = useContext(AuthContext);
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,12 +25,13 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const user = await login(formData.email, formData.password);
+      // Pass hospitalId to the context login function
+      const user = await login(formData.email, formData.password, formData.hospitalId);
       
-      // INTELLIGENT ROUTING: Send user to their specific dashboard
+      // ROLE-BASED REDIRECTION
       switch(user.role) {
         case 'admin':
-          navigate('/dashboard/admin');
+          navigate('/dashboard/admin'); // Hospital Admin
           break;
         case 'doctor':
           navigate('/dashboard/doctor');
@@ -39,14 +42,17 @@ const LoginForm = () => {
         case 'receptionist':
           navigate('/dashboard/receptionist');
           break;
+        case 'pharmacist':
+          navigate('/dashboard/pharmacist');
+          break;
         case 'lab_tech':
-          navigate('/dashboard/lab'); // We can build this later
+          navigate('/dashboard/lab');
           break;
         default:
-          navigate('/dashboard/doctor'); // Fallback
+          navigate('/dashboard'); // Fallback
       }
     } catch (err) {
-      console.error("Login failed", err);
+      console.error("Login Error:", err);
     }
   };
 
@@ -54,9 +60,19 @@ const LoginForm = () => {
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
         <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
-          <p className="text-red-700">{error}</p>
+          <p className="text-red-700 font-medium">{error}</p>
         </div>
       )}
+
+      {/* Hospital ID Field - REQUIRED for backend to know which DB to check */}
+      <Input
+        label="Hospital ID"
+        name="hospitalId"
+        value={formData.hospitalId}
+        onChange={handleChange}
+        placeholder="e.g. apollo-pune-123"
+        required
+      />
 
       <Input
         label="Email Address"
@@ -64,7 +80,7 @@ const LoginForm = () => {
         type="email"
         value={formData.email}
         onChange={handleChange}
-        placeholder="role@hospital.com" // Hint to user
+        placeholder="user@hospital.com"
         required
       />
 
@@ -74,15 +90,12 @@ const LoginForm = () => {
         type="password"
         value={formData.password}
         onChange={handleChange}
-        placeholder="Any password works for demo"
         required
       />
 
       <Button type="submit" fullWidth isLoading={loading}>
         Sign in
       </Button>
-
-     
 
       <div className="mt-4 text-center border-t pt-4">
         <p className="text-sm text-gray-600">

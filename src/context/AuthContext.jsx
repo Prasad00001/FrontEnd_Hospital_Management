@@ -9,26 +9,48 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Check for saved user on load
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user) {
-      setCurrentUser(user);
+    // Check for saved user on load with Safety Check
+    const storedUser = localStorage.getItem('user');
+    const storedToken = localStorage.getItem('token');
+
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        const user = JSON.parse(storedUser);
+        if (user) {
+          setCurrentUser(user);
+        }
+      } catch (err) {
+        console.error("Corrupt user data found in storage. Clearing...", err);
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+      }
     }
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email, password, tenantId) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await authService.login(email, password);
-      // Save to local storage
-      localStorage.setItem('user', JSON.stringify(data.data.user));
-      localStorage.setItem('token', data.data.token);
+      // 1. Call Backend
+      const response = await authService.login(email, password, tenantId);
       
-      setCurrentUser(data.data.user);
-      return data.data.user;
+      // 2. Extract Data 
+      // Backend response structure: { success: true, data: { name, role, token... } }
+      const userData = response.data;
+
+      // 3. Save to Local Storage (Safe check)
+      if (userData) {
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('token', userData.token);
+        setCurrentUser(userData);
+        return userData;
+      } else {
+        throw new Error("Invalid response from server");
+      }
+
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      const msg = err.response?.data?.message || err.message || "Login failed";
+      setError(msg);
       throw err;
     } finally {
       setLoading(false);
@@ -38,6 +60,9 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     authService.logout();
     setCurrentUser(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('tenantId');
   };
 
   return (

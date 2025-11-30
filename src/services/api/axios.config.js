@@ -1,25 +1,32 @@
 import axios from 'axios';
 
-// Create an instance of axios
+// Ensure this matches your backend URL
+const MAIN_API_URL = 'http://localhost:5000/api'; 
+
 const apiClient = axios.create({
-  baseURL: 'http://localhost:5000/api', // Yaha apna backend URL dalna jab ready ho
+  baseURL: MAIN_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request Interceptor: Har request ke sath Token attach karega
+// --- REQUEST INTERCEPTOR ---
+// This runs BEFORE every request is sent
 apiClient.interceptors.request.use(
   (config) => {
+    // 1. Attach JWT Token (for Authentication)
     const token = localStorage.getItem('token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-    // Tenant ID bhi bhej sakte hain agar multi-tenancy use kar rahe ho
+
+    // 2. Attach Tenant ID (for Database Selection)
+    // This is the specific fix for your error
     const tenantId = localStorage.getItem('tenantId');
     if (tenantId) {
-      config.headers['X-Tenant-ID'] = tenantId;
+      config.headers['x-tenant-id'] = tenantId;
     }
+
     return config;
   },
   (error) => {
@@ -27,13 +34,15 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Response Interceptor: Agar 401 (Unauthorized) aaye to logout kar dega
+// --- RESPONSE INTERCEPTOR ---
+// This runs AFTER every response is received
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
+    // If 401 Unauthorized (Token expired or invalid)
     if (error.response && error.response.status === 401) {
-      localStorage.clear();
-      window.location.href = '/login';
+      localStorage.clear(); // Clear all data
+      window.location.href = '/login'; // Force redirect to login
     }
     return Promise.reject(error);
   }
