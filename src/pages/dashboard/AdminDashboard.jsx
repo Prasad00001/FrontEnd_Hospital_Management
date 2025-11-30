@@ -1,10 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // <--- Import useNavigate
 import StatsCard from '../../components/dashboard/StatsCard';
 import { Users, UserPlus, CreditCard, Activity, Stethoscope } from 'lucide-react';
 import Button from '../../components/common/Button';
 
 const AdminDashboard = () => {
-  // Mock Data (Replace with API call later)
+  const navigate = useNavigate(); // <--- Initialize hook
+
+  // Mock Data
   const stats = [
     { title: 'Total Doctors', value: '142', icon: Stethoscope, color: 'bg-blue-500', trend: 12 },
     { title: 'Active Patients', value: '1,234', icon: Users, color: 'bg-green-500', trend: 8 },
@@ -31,9 +34,11 @@ const AdminDashboard = () => {
           <Button variant="outline" onClick={() => alert('Download Report')}>
              Download Report
           </Button>
-          <Button variant="primary" onClick={() => alert('Add Staff Modal')}>
+          
+          {/* Linked Button to Staff Management */}
+          <Button variant="primary" onClick={() => navigate('/dashboard/staff')}>
             <UserPlus size={18} className="mr-2 inline" />
-            Add New Staff
+            Manage Staff
           </Button>
         </div>
       </div>
@@ -49,7 +54,12 @@ const AdminDashboard = () => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="p-6 border-b border-gray-100 flex justify-between items-center">
           <h2 className="text-lg font-bold text-gray-800">Recently Joined Staff</h2>
-          <button className="text-blue-600 text-sm font-medium hover:underline">View All</button>
+          <button 
+            className="text-blue-600 text-sm font-medium hover:underline"
+            onClick={() => navigate('/dashboard/staff')}
+          >
+            View All
+          </button>
         </div>
         
         <div className="overflow-x-auto">
