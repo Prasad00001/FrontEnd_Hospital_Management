@@ -1,9 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import StatsCard from '../../components/dashboard/StatsCard';
-import { Activity, Thermometer, Heart, Bed, Users, AlertCircle } from 'lucide-react';
+import { Bed, Users, AlertCircle } from 'lucide-react';
 import Button from '../../components/common/Button';
 
 const NurseDashboard = () => {
+  const navigate = useNavigate();
+
   // Mock Data: Ward Stats
   const stats = [
     { title: 'Admitted Patients', value: '42', icon: Bed, color: 'bg-blue-500' },
@@ -19,6 +22,11 @@ const NurseDashboard = () => {
     { id: 204, name: 'Mr. John Smith', bed: 'Ward B - 205', condition: 'Stable', lastVitals: '4 hrs ago', nextDue: 'Now' },
   ];
 
+  const handleUpdateVitals = (patient) => {
+    // Navigate to Vitals Entry page and pass patient name
+    navigate('/dashboard/vitals', { state: { patientName: patient.name, patientId: patient.id } });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -26,7 +34,8 @@ const NurseDashboard = () => {
           <h1 className="text-2xl font-bold text-gray-800">Nurse Station</h1>
           <p className="text-gray-500">General Ward & ICU Monitoring</p>
         </div>
-        <Button variant="primary" onClick={() => alert('Admit Patient Modal')}>
+        {/* Connected Button */}
+        <Button variant="primary" onClick={() => navigate('/dashboard/admissions')}>
           + New Admission
         </Button>
       </div>
@@ -81,9 +90,10 @@ const NurseDashboard = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4">
+                    {/* Connected Button with Data Passing */}
                     <button 
                       className="text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-md text-sm font-medium transition-colors border border-blue-200"
-                      onClick={() => alert(`Open Vitals Entry for ${patient.name}`)}
+                      onClick={() => handleUpdateVitals(patient)}
                     >
                       Update Vitals
                     </button>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
-import { Bed, Save } from 'lucide-react';
+import { Bed, Save, ArrowLeft } from 'lucide-react';
 
 const AdmitPatient = () => {
   const navigate = useNavigate();
@@ -24,7 +24,10 @@ const AdmitPatient = () => {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
-        <div className="p-3 bg-blue-100 text-blue-600 rounded-full">
+        <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-200 rounded-full">
+          <ArrowLeft size={20} />
+        </button>
+        <div className="p-2 bg-blue-100 text-blue-600 rounded-lg">
           <Bed size={24} />
         </div>
         <h1 className="text-2xl font-bold text-gray-800">In-Patient Admission (IPD)</h1>
@@ -85,7 +88,10 @@ const AdmitPatient = () => {
              ></textarea>
           </div>
 
-          <div className="pt-4">
+          <div className="pt-4 flex gap-4">
+            <Button variant="secondary" onClick={() => navigate('/dashboard/nurse')} fullWidth>
+              Cancel
+            </Button>
             <Button type="submit" fullWidth>
               <Save size={18} className="mr-2 inline" /> Admit Patient
             </Button>

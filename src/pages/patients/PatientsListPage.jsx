@@ -7,7 +7,7 @@ const PatientsListPage = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Mock Data (In real app, this comes from API)
+  // Mock Data
   const [patients] = useState([
     { id: 'UHID-1001', name: 'Rahul Sharma', age: 32, gender: 'Male', mobile: '9876543210', lastVisit: '2023-11-28', status: 'Admitted' },
     { id: 'UHID-1002', name: 'Priya Patel', age: 28, gender: 'Female', mobile: '9988776655', lastVisit: '2023-11-29', status: 'OPD' },
@@ -16,7 +16,6 @@ const PatientsListPage = () => {
     { id: 'UHID-1005', name: 'Vikram Singh', age: 12, gender: 'Male', mobile: 'Guardian: 98765', lastVisit: '2023-11-30', status: 'OPD' },
   ]);
 
-  // Filter logic
   const filteredPatients = patients.filter(p => 
     p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
     p.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -25,7 +24,6 @@ const PatientsListPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Patient Directory</h1>
@@ -36,7 +34,6 @@ const PatientsListPage = () => {
         </Button>
       </div>
 
-      {/* Search & Filter Bar */}
       <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4">
         <div className="relative flex-1">
           <input 
@@ -55,7 +52,6 @@ const PatientsListPage = () => {
         </div>
       </div>
 
-      {/* Table Section */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-gray-600">
@@ -90,12 +86,24 @@ const PatientsListPage = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex justify-center gap-2">
-                        <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-full" title="View Details">
+                        {/* Connected View Action */}
+                        <button 
+                          onClick={() => navigate(`/dashboard/patients/${patient.id}`)}
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-full" 
+                          title="View Details"
+                        >
                           <Eye size={18} />
                         </button>
-                        <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-full" title="Edit Profile">
+                        
+                        {/* Connected Edit Action (Simulates navigation) */}
+                        <button 
+                          onClick={() => navigate(`/dashboard/patients/${patient.id}`)}
+                          className="p-2 text-gray-600 hover:bg-gray-100 rounded-full" 
+                          title="Edit Profile"
+                        >
                           <Edit size={18} />
                         </button>
+                        
                         <button className="p-2 text-purple-600 hover:bg-purple-50 rounded-full" title="View History">
                           <FileText size={18} />
                         </button>

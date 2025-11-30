@@ -1,9 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import StatsCard from '../../components/dashboard/StatsCard';
 import Button from '../../components/common/Button';
-import { UserPlus, Calendar, Phone, Users, Clock, Search } from 'lucide-react';
+import { UserPlus, Calendar, Phone, Users, Search } from 'lucide-react';
 
 const ReceptionistDashboard = () => {
+  const navigate = useNavigate();
+
   const stats = [
     { title: 'New Registrations', value: '18', icon: UserPlus, color: 'bg-green-500' },
     { title: 'Appointments Today', value: '42', icon: Calendar, color: 'bg-blue-500' },
@@ -25,10 +28,10 @@ const ReceptionistDashboard = () => {
           <p className="text-gray-500">Manage Patients & Appointments</p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={() => alert('Search Patient Modal')}>
+          <Button variant="outline" onClick={() => navigate('/dashboard/patients')}>
             <Search size={18} className="mr-2 inline" /> Patient Search
           </Button>
-          <Button variant="primary" onClick={() => alert('New Patient Registration')}>
+          <Button variant="primary" onClick={() => navigate('/dashboard/patient/add')}>
             <UserPlus size={18} className="mr-2 inline" /> New Registration
           </Button>
         </div>
@@ -46,7 +49,7 @@ const ReceptionistDashboard = () => {
         <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
             <h2 className="text-lg font-bold text-gray-800">Today's Appointments</h2>
-            <Button variant="outline" onClick={() => alert('Book Appointment')}>
+            <Button variant="outline" onClick={() => navigate('/dashboard/appointments')}>
               <Calendar size={16} className="mr-2 inline" /> Book New
             </Button>
           </div>
@@ -89,13 +92,19 @@ const ReceptionistDashboard = () => {
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
             <h3 className="font-bold text-gray-800 mb-4">Quick Actions</h3>
             <div className="space-y-3">
-              <button className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+              <button 
+                onClick={() => navigate('/dashboard/emergency')}
+                className="w-full flex items-center justify-between p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors border border-red-100"
+              >
                 <span className="flex items-center gap-3">
-                  <Phone size={18} className="text-blue-500" />
-                  <span className="font-medium text-gray-700">Emergency Admission</span>
+                  <Phone size={18} className="text-red-500" />
+                  <span className="font-medium text-red-700">Emergency Admission</span>
                 </span>
               </button>
-              <button className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+              <button 
+                onClick={() => navigate('/dashboard/appointments')}
+                className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              >
                 <span className="flex items-center gap-3">
                   <Calendar size={18} className="text-purple-500" />
                   <span className="font-medium text-gray-700">Reschedule</span>

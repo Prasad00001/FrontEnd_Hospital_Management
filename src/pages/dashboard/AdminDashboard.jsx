@@ -1,11 +1,11 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // <--- Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import StatsCard from '../../components/dashboard/StatsCard';
 import { Users, UserPlus, CreditCard, Activity, Stethoscope } from 'lucide-react';
 import Button from '../../components/common/Button';
 
 const AdminDashboard = () => {
-  const navigate = useNavigate(); // <--- Initialize hook
+  const navigate = useNavigate();
 
   // Mock Data
   const stats = [
@@ -22,6 +22,24 @@ const AdminDashboard = () => {
     { id: 4, name: 'Rahul Patil', role: 'Pharmacist', dept: 'Pharmacy', date: '2025-11-27', status: 'Active' },
   ];
 
+  const handleDownloadReport = () => {
+    // Mock CSV Data
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + "Metric,Value\n"
+      + "Total Doctors,142\n"
+      + "Active Patients,1234\n"
+      + "New Appointments,56\n"
+      + "Hospital Revenue,12.5L";
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "hospital_report.csv");
+    document.body.appendChild(link); // Required for Firefox
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -31,7 +49,7 @@ const AdminDashboard = () => {
           <p className="text-gray-500 text-sm">Welcome back, Administrator</p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={() => alert('Download Report')}>
+          <Button variant="outline" onClick={handleDownloadReport}>
              Download Report
           </Button>
           

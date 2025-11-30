@@ -1,11 +1,11 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // <--- 1. IMPORT THIS
+import { useNavigate } from 'react-router-dom';
 import StatsCard from '../../components/dashboard/StatsCard';
 import Button from '../../components/common/Button';
 import { Users, Clock, Calendar, Activity, Search, ChevronRight } from 'lucide-react';
 
 const DoctorDashboard = () => {
-  const navigate = useNavigate(); // <--- 2. INITIALIZE THIS
+  const navigate = useNavigate();
 
   // Mock Data: Today's Stats
   const stats = [
@@ -26,7 +26,6 @@ const DoctorDashboard = () => {
     priority: 'High'
   };
 
-  // Mock Data: Upcoming List
   const upcomingPatients = [
     { id: 102, name: 'Rahul Deshmukh', time: '10:45 AM', type: 'Follow-up', status: 'Waiting' },
     { id: 103, name: 'Amit Kumar', time: '11:00 AM', type: 'New Visit', status: 'Waiting' },
@@ -62,7 +61,7 @@ const DoctorDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* 3. CURRENT PATIENT CARD (Main Focus) */}
+        {/* 3. CURRENT PATIENT CARD */}
         <div className="lg:col-span-2">
           <div className="bg-white rounded-xl shadow-sm border border-blue-100 overflow-hidden">
             <div className="bg-blue-50 px-6 py-4 border-b border-blue-100 flex justify-between items-center">
@@ -101,15 +100,16 @@ const DoctorDashboard = () => {
 
                 {/* Quick Actions for Doctor */}
                 <div className="flex flex-col gap-3 justify-center min-w-[200px]">
-                  {/* THIS IS THE BUTTON YOU WANTED FIXED */}
                   <Button variant="primary" fullWidth onClick={() => navigate('/dashboard/prescription/create')}>
                     Write Prescription
                   </Button>
                   
-                  <Button variant="outline" fullWidth onClick={() => alert('View History')}>
+                  {/* UPDATED: Navigates to history */}
+                  <Button variant="outline" fullWidth onClick={() => navigate('/dashboard/doctor/prescriptions')}>
                     View History
                   </Button>
-                  <Button variant="secondary" fullWidth onClick={() => alert('Request Lab Test')}>
+                  
+                  <Button variant="secondary" fullWidth onClick={() => alert('Lab Orders Feature Coming Soon')}>
                     Lab Orders
                   </Button>
                 </div>
@@ -143,7 +143,13 @@ const DoctorDashboard = () => {
             ))}
           </div>
           <div className="p-4 border-t border-gray-100 text-center">
-            <button className="text-sm text-blue-600 font-medium hover:underline">View Full Schedule</button>
+            {/* UPDATED: Navigates to full schedule */}
+            <button 
+              onClick={() => navigate('/dashboard/doctor/appointments')}
+              className="text-sm text-blue-600 font-medium hover:underline"
+            >
+              View Full Schedule
+            </button>
           </div>
         </div>
       </div>

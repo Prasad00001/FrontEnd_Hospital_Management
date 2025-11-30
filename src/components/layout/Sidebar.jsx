@@ -10,9 +10,9 @@ import {
   Activity,
   UserPlus,
   Phone,
-  Pill,            // Added this
-  TestTube,        // Added this
-  ClipboardList    // Added this (This was causing your error)
+  Pill,
+  TestTube,
+  ClipboardList
 } from 'lucide-react';
 
 const Sidebar = ({ userRole }) => {
@@ -28,8 +28,8 @@ const Sidebar = ({ userRole }) => {
     doctor: [
       { name: 'Dashboard', path: '/dashboard/doctor', icon: LayoutDashboard },
       { name: 'My Patients', path: '/dashboard/patients', icon: Users },
-      { name: 'Appointments', path: '/dashboard/appointments', icon: Calendar },
-      { name: 'Prescriptions', path: '/dashboard/prescriptions', icon: FileText },
+      { name: 'Appointments', path: '/dashboard/doctor/appointments', icon: Calendar },
+      { name: 'Prescriptions', path: '/dashboard/doctor/prescriptions', icon: FileText },
     ],
     nurse: [
       { name: 'Dashboard', path: '/dashboard/nurse', icon: LayoutDashboard },
@@ -54,17 +54,14 @@ const Sidebar = ({ userRole }) => {
     ]
   };
 
-  // Fallback to admin menu if role is undefined or invalid
   const currentMenu = menus[userRole] || menus['admin'];
 
   return (
     <div className="w-64 bg-slate-900 text-white min-h-screen flex flex-col transition-all duration-300">
-      {/* Brand Logo */}
       <div className="h-16 flex items-center justify-center border-b border-slate-700 bg-slate-800">
         <h1 className="text-xl font-bold tracking-wider">HMS INDIA</h1>
       </div>
 
-      {/* Navigation Links */}
       <nav className="flex-1 overflow-y-auto py-4">
         <ul className="space-y-1">
           {currentMenu.map((item) => {
@@ -90,18 +87,18 @@ const Sidebar = ({ userRole }) => {
         </ul>
       </nav>
 
-      {/* User Info (Bottom of Sidebar) */}
-      <div className="p-4 border-t border-slate-700 bg-slate-800">
+      {/* Connected Profile Link */}
+      <Link to="/dashboard/profile" className="block p-4 border-t border-slate-700 bg-slate-800 hover:bg-slate-700 transition-colors cursor-pointer">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-sm font-bold">
+          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-sm font-bold text-white">
             {userRole ? userRole[0].toUpperCase() : 'U'}
           </div>
           <div>
-            <p className="text-sm font-medium capitalize">{userRole?.replace('_', ' ') || 'User'}</p>
-            <p className="text-xs text-slate-400">Online</p>
+            <p className="text-sm font-medium capitalize text-white">{userRole?.replace('_', ' ') || 'User'}</p>
+            <p className="text-xs text-slate-400">View Profile</p>
           </div>
         </div>
-      </div>
+      </Link>
     </div>
   );
 };

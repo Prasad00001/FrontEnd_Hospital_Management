@@ -39,6 +39,13 @@ const UserManagement = () => {
     setFormData({ firstName: '', lastName: '', email: '', role: 'Doctor', department: '' });
   };
 
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      const updatedUsers = users.filter(user => user.id !== id);
+      setUsers(updatedUsers);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -75,7 +82,12 @@ const UserManagement = () => {
                 <td className="px-6 py-4">{user.dept}</td>
                 <td className="px-6 py-4 text-green-600 font-medium">{user.status}</td>
                 <td className="px-6 py-4">
-                  <button className="text-red-500 hover:bg-red-50 p-2 rounded"><Trash2 size={16}/></button>
+                  <button 
+                    onClick={() => handleDelete(user.id)}
+                    className="text-red-500 hover:bg-red-50 p-2 rounded transition-colors"
+                  >
+                    <Trash2 size={16}/>
+                  </button>
                 </td>
               </tr>
             ))}
