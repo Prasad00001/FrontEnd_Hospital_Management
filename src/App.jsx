@@ -5,7 +5,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './components/layout/MainLayout';
 import Login from './pages/auth/Login';
 import HospitalOnboarding from './pages/auth/HospitalOnboarding';
-import ForgotPassword from './pages/auth/ForgotPassword'; // <--- Ensure this file exists
+import ForgotPassword from './pages/auth/ForgotPassword';
 import RoleBasedRoutes from './routes/RoleBasedRoutes';
 
 // Dashboards
@@ -20,10 +20,15 @@ import LabDashboard from './pages/dashboard/LabDashboard';
 import AddPatientPage from './pages/patients/AddPatientPage';
 import CreatePrescription from './pages/prescriptions/CreatePrescriptionPage';
 import PatientsListPage from './pages/patients/PatientsListPage';
-import UserManagement from './pages/admin/UserManagement'; // <--- Ensure this file exists
+import UserManagement from './pages/admin/UserManagement';
 import TestQueue from './pages/lab/TestQueue';
 import PharmacyQueue from './pages/pharmacy/PharmacyQueue';
 import VitalsEntry from './pages/nurse/VitalsEntry';
+
+// NEWLY ADDED PAGES
+import Inventory from './pages/pharmacy/Inventory';
+import BookAppointment from './pages/appointments/BookAppointment';
+import AdmitPatient from './pages/nurse/AdmitPatient';
 
 function App() {
   return (
@@ -37,13 +42,13 @@ function App() {
       {/* --- PROTECTED ROUTES (Inside Main Layout) --- */}
       <Route path="/dashboard" element={<MainLayout />}>
         
-        {/* Default Redirect */}
+        {/* Default Redirect: Sends user to appropriate dashboard based on logic in Login component or here */}
         <Route index element={<Navigate to="doctor" replace />} />
         
         {/* 1. ADMIN ROUTES */}
         <Route element={<RoleBasedRoutes allowedRoles={['admin']} />}>
           <Route path="admin" element={<AdminDashboard />} />
-          <Route path="staff" element={<UserManagement />} /> {/* <--- Staff Management */}
+          <Route path="staff" element={<UserManagement />} />
         </Route>
 
         {/* 2. DOCTOR ROUTES */}
@@ -56,19 +61,21 @@ function App() {
         <Route element={<RoleBasedRoutes allowedRoles={['nurse', 'admin']} />}>
           <Route path="nurse" element={<NurseDashboard />} />
           <Route path="vitals" element={<VitalsEntry />} />
+          <Route path="admissions" element={<AdmitPatient />} /> {/* <--- Connected New Page */}
         </Route>
 
         {/* 4. RECEPTIONIST ROUTES */}
         <Route element={<RoleBasedRoutes allowedRoles={['receptionist', 'admin']} />}>
           <Route path="receptionist" element={<ReceptionistDashboard />} />
           <Route path="patient/add" element={<AddPatientPage />} />
+          <Route path="appointments" element={<BookAppointment />} /> {/* <--- Connected New Page */}
         </Route>
 
         {/* 5. PHARMACIST ROUTES */}
         <Route element={<RoleBasedRoutes allowedRoles={['pharmacist', 'admin']} />}>
           <Route path="pharmacist" element={<PharmacistDashboard />} />
           <Route path="pharmacy/prescriptions" element={<PharmacyQueue />} />
-          <Route path="pharmacy/inventory" element={<div>Inventory Management (Coming Soon)</div>} />
+          <Route path="pharmacy/inventory" element={<Inventory />} /> {/* <--- Connected New Page */}
         </Route>
 
         {/* 6. LAB TECHNICIAN ROUTES */}
